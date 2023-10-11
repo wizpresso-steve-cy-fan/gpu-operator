@@ -597,7 +597,10 @@ func getDriverRoot() (string, bool) {
 		log.Infof("Detected pre-installed driver on the host")
 		return "/host", true
 	}
-
+	if fileInfo, err := os.Lstat("/host/usr/lib/wsl/lib/nvidia-smi"); err == nil && fileInfo.Size() != 0 {
+		log.Infof("Detected WSL2 Nvidia support on the host, assuming driver pre-installed")
+		return "/host", true
+	}
 	return driverContainerRoot, false
 }
 
